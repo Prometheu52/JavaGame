@@ -135,11 +135,12 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
 
+            glClear(GL_COLOR_BUFFER_BIT);
+
             if (deltaTime >= 0)
                 currentScene.update(deltaTime);
 
-            glClearColor(r, g, b, a);
-            glClear(GL_COLOR_BUFFER_BIT);
+             glClearColor(r, g, b, a);
 
             glfwSwapBuffers(glfwWindow);
 

@@ -145,7 +145,7 @@ public class LevelEditorScene extends Scene{
         glVertexAttribPointer(0, positionsSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize);
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize*floatSizeBytes);
         glEnableVertexAttribArray(1);
 
     }
@@ -158,6 +158,7 @@ public class LevelEditorScene extends Scene{
         glUseProgram(shaderProgram);
         // Bind the VAO
         glBindVertexArray(vaoID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
 
         // Enable vertex attribute pointers
         glEnableVertexAttribArray(0);
