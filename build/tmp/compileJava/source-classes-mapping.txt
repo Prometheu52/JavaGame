@@ -2,12 +2,16 @@ engine/spirit/MouseListener.java
  engine.spirit.MouseListener
 engine/spirit/KeyListener.java
  engine.spirit.KeyListener
-engine/spirit/LevelScene.java
- engine.spirit.LevelScene
-engine/spirit/Scene.java
- engine.spirit.Scene
 Main.java
  Main
+engine/spirit/Scene.java
+ engine.spirit.Scene
+engine/spirit/Camera.java
+ engine.spirit.Camera
+engine/spirit/LevelScene.java
+ engine.spirit.LevelScene
+engine/renderer/Shader.java
+ engine.renderer.Shader
 engine/spirit/Window.java
  engine.spirit.Window
 engine/spirit/LevelEditorScene.java

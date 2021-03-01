@@ -135,8 +135,9 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
 
+            // First clear
             glClear(GL_COLOR_BUFFER_BIT);
-
+            //Then render!
             if (deltaTime >= 0)
                 currentScene.update(deltaTime);
 

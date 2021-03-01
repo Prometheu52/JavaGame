@@ -1,10 +1,13 @@
 package engine.spirit;
 
+import engine.renderer.Shader;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -12,37 +15,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class LevelEditorScene extends Scene{
 
-    private String vertexShaderScr = "#version 460 core\n" +
-            "\n" +
-            "layout (location = 0) in vec3 aPos;\n" +
-            "layout (location = 1) in vec4 aColor;\n" +
-            "\n" +
-            "out vec4 fColor;\n" +
-            "\n" +
-            "void main(){\n" +
-            "    fColor = aColor;\n" +
-            "\n" +
-            "    gl_Position = vec4(aPos, 1.0);\n" +
-            "}";
-
-    private String fragmentShaderScr = "#version 460 core\n" +
-            "\n" +
-            "in vec4 fColor;\n" +
-            "\n" +
-            "out vec4 color;\n" +
-            "\n" +
-            "void main(){\n" +
-            "    color = fColor;\n" +
-            "}";
-
-    private int vertexID, fragmentID, shaderProgram;
+    private final String DEFAULT_SHADER_PATH = "assets/shaders/default.glsl";
 
     private float[] vertexArray = {
             //POSITION                //COLOR
-             0.5f,  -0.5f,  0.0f,       1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
-            -0.5f,   0.5f,  0.0f,       0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
-             0.5f,   0.5f,  0.0f,       0.0f, 0.0f, 1.0f, 1.0f, // Top right    2
-            -0.5f,  -0.5f,  0.0f,       1.0f, 1.0f, 0.0f, 1.0f // Bottom left   3
+            100.0f, 0.0f,   0.0f,       1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
+            0.0f,   100.0f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
+            100.0f, 100.0f, 0.0f,       0.0f, 0.0f, 1.0f, 1.0f, // Top right    2
+            0.0f,   0.0f,   0.0f,       1.0f, 1.0f, 0.0f, 1.0f // Bottom left   3
     };
 
     // IMPORTANT: Must be in counter-clockwise order
@@ -53,66 +33,23 @@ public class LevelEditorScene extends Scene{
 
     private int vaoID, vboID, eboID;
 
+    private Shader defaultShader;
+
     public LevelEditorScene() {
         System.out.println("LEVEL EDITOR SCENE");
+
+       // Shader testShader = new Shader("assets/shaders/default.glsl");
     }
 
     @Override
     public void init(){
-        /* Compile and Link shaders */
 
-        // Load and compile the vertex shader
-        this.vertexID = glCreateShader(GL_VERTEX_SHADER);
-        // Pass the shader source code to the GPU
-        glShaderSource(vertexID, vertexShaderScr);
-        glCompileShader(vertexID);
+        this.camera = new Camera(new Vector2f(0.0f, 0.0f));
 
-        // Check for errors
-        int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE){
-            int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: 'defaultShader.glsl'\n\tVertex compilation failed");
-            System.out.println(glGetShaderInfoLog(vertexID, len));
+        defaultShader = new Shader(DEFAULT_SHADER_PATH);
 
-            assert false:"";
-        }
+        defaultShader.compile();
 
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-        // Load and compile the fragment shader
-        this.fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-        // Pass the shader source code to the GPU
-        glShaderSource(fragmentID, fragmentShaderScr);
-        glCompileShader(fragmentID);
-
-        // Check for compilation errors
-        success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE){
-            int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: 'defaultShader.glsl'\n\tFragment compilation failed");
-            System.out.println(glGetShaderInfoLog(fragmentID, len));
-
-            assert false:"";
-        }
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-        // Link shaders
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexID);
-        glAttachShader(shaderProgram, fragmentID);
-        glLinkProgram(shaderProgram);
-
-        // Check for linking errors
-        if (glGetProgrami(shaderProgram, GL_LINK_STATUS) == GL_FALSE){
-            int len = glGetProgrami(shaderProgram, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: 'defaultShader.glsl'\n\tLinking of shaders failed");
-            System.out.println(glGetShaderInfoLog(shaderProgram, len));
-
-            assert false:"";
-        }
-
-/*--------------------------------------------------------------------------------------------------------------------*/
 
         /* Generate VAO, VBO, and EBO objects, and sent it to the GPU */
 
@@ -148,14 +85,22 @@ public class LevelEditorScene extends Scene{
         glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize*floatSizeBytes);
         glEnableVertexAttribArray(1);
 
+        camera.position.x = -300;
+        camera.position.y = -300;
+
+
     }
 
     @Override
     public void update(float deltaTime) {
         //System.out.println("" + (1.0f / deltaTime) + "FPS");
 
-        // Bind Shader Program
-        glUseProgram(shaderProgram);
+        defaultShader.use();
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
+
+        defaultShader.UploadFloat("uTime", (float) glfwGetTime());
+
         // Bind the VAO
         glBindVertexArray(vaoID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
@@ -173,7 +118,7 @@ public class LevelEditorScene extends Scene{
 
         glBindVertexArray(0);
 
-        glUseProgram(0);
+        defaultShader.detach();
 
     }
 
