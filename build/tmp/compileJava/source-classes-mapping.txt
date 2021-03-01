@@ -2,16 +2,32 @@ engine/spirit/MouseListener.java
  engine.spirit.MouseListener
 engine/spirit/KeyListener.java
  engine.spirit.KeyListener
-Main.java
- Main
-engine/spirit/Scene.java
- engine.spirit.Scene
+engine/renderer/Texture.java
+ engine.renderer.Texture
+engine/spirit/Component.java
+ engine.spirit.Component
 engine/spirit/Camera.java
  engine.spirit.Camera
-engine/spirit/LevelScene.java
- engine.spirit.LevelScene
 engine/renderer/Shader.java
  engine.renderer.Shader
+engine/spirit/Transform.java
+ engine.spirit.Transform
+engine/spirit/GameObject.java
+ engine.spirit.GameObject
+Components/FontRenderer.java
+ Components.FontRenderer
+Components/SpriteRenderer.java
+ Components.SpriteRenderer
+engine/spirit/Scene.java
+ engine.spirit.Scene
+Main.java
+ Main
+engine/renderer/Renderer.java
+ engine.renderer.Renderer
+engine/spirit/LevelScene.java
+ engine.spirit.LevelScene
+engine/renderer/RenderBatch.java
+ engine.renderer.RenderBatch
 engine/spirit/Window.java
  engine.spirit.Window
 engine/spirit/LevelEditorScene.java

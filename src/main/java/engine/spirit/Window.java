@@ -26,10 +26,11 @@ public class Window {
         this.height = 1080;
         this.title = "Mario";
 
-        this.r = 0f;
-        this.g = 0f;
-        this.b = 0f;
-        this.a = 0f;
+        int generic = 0;
+        this.r = generic;
+        this.g = generic;
+        this.b = generic;
+        this.a = generic;
     }
 
     public static void changeScene(int newScene){
@@ -37,10 +38,12 @@ public class Window {
             case 0:
                 currentScene = new LevelEditorScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             default:
                 assert false:"Unknown scene '" + newScene + "";
@@ -149,5 +152,9 @@ public class Window {
             deltaTime = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+
+    public static Scene getCurrentScene() {
+        return currentScene;
     }
 }
