@@ -155,6 +155,6 @@ public class Window {
     }
 
     public static Scene getCurrentScene() {
-        return currentScene;
+        return get().currentScene;
     }
 }

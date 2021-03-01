@@ -3,7 +3,6 @@ package engine.renderer;
 import Components.SpriteRenderer;
 import engine.spirit.Window;
 import org.joml.Vector4f;
-import org.lwjgl.system.CallbackI;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -94,7 +93,7 @@ public class RenderBatch {
 
         // Use shader
         shader.use();
-        shader.uploadMat4f("uProjection", Window.getCurrentScene().camera().getViewMatrix());
+        shader.uploadMat4f("uProjection", Window.getCurrentScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getCurrentScene().camera().getViewMatrix());
 
         glBindVertexArray(vaoID);
