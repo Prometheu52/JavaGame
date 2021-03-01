@@ -155,7 +155,7 @@ public class RenderBatch {
     }
 
     private void loadElementIndices(int[] elements, int index){
-        int offsetArrayIndex = 6* index;
+        int offsetArrayIndex = 6 * index;
         int offset = 4 * index;
 
         // 3, 2, 0, 0, 2, 1     ->      7, 6, 4, 4, 6, 5
