@@ -3,6 +3,7 @@ package engine.renderer;
 import Components.SpriteRenderer;
 import engine.spirit.Window;
 import org.joml.Vector4f;
+import utils.AssetPool;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -35,8 +36,7 @@ public class RenderBatch {
     private Shader shader;
 
     public RenderBatch(int maxBathSize) {
-        shader = new Shader(DEFAULT_SHADER_PATH);
-        shader.compile();
+        shader = AssetPool.getShader(DEFAULT_SHADER_PATH);
         this.sprites = new SpriteRenderer[maxBathSize];
         this.maxBathSize = maxBathSize;
 
